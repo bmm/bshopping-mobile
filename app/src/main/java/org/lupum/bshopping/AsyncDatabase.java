@@ -5,11 +5,11 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
-public class AsyncDatabase {
-    Database db;
+class AsyncDatabase {
+    private final Database db;
 
-    public AsyncDatabase(Context contextt) {
-        db = Database.getInstance(contextt);
+    public AsyncDatabase(Context context) {
+        db = Database.getInstance(context);
     }
 
     public void insertProduct(Product product, final OnDatabaseProduct callback) {

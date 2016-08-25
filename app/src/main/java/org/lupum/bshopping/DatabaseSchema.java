@@ -2,11 +2,11 @@ package org.lupum.bshopping;
 
 import android.provider.BaseColumns;
 
-public final class DatabaseSchema {
+final class DatabaseSchema {
     private DatabaseSchema() {
     }
 
-    protected static final String SQL_CREATE_ENTRIES = String.format("" +
+    static final String SQL_CREATE_ENTRIES = String.format("" +
             "CREATE TABLE %s (" +
             "%s INTEGER PRIMARY KEY, " +
             "%s TEXT, " +
@@ -18,7 +18,7 @@ public final class DatabaseSchema {
             ProductEntry.COLUMN_NAME_SELECTED
     );
 
-    protected static final String SQL_DELETE_ENTRIES = String.format("" +
+    static final String SQL_DELETE_ENTRIES = String.format("" +
             "DROP TABLE IF EXISTS %s",
             ProductEntry.TABLE_NAME
     );

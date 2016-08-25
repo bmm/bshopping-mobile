@@ -1,8 +1,10 @@
 package org.lupum.bshopping;
 
+import android.support.annotation.NonNull;
+
 import java.text.Collator;
 
-public class Product implements Comparable {
+public class Product implements Comparable<Product> {
     private Long id;
     private String name;
     private boolean selected;
@@ -10,12 +12,6 @@ public class Product implements Comparable {
     public Product() {
         this.id = null;
         this.name = "";
-        this.selected = false;
-    }
-
-    public Product(String name) {
-        this.id = null;
-        this.name = name;
         this.selected = false;
     }
 
@@ -49,11 +45,7 @@ public class Product implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        if (o != null && o instanceof Product) {
-            return Collator.getInstance().compare(name, ((Product)o).getName());
-        }
-
-        return 0;
+    public int compareTo(@NonNull Product product) {
+        return Collator.getInstance().compare(name, product.getName());
     }
 }

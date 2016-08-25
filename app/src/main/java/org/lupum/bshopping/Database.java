@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -21,8 +20,8 @@ public class Database extends SQLiteOpenHelper {
         return sInstance;
     }
 
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "bshopping.db";
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "bshopping.db";
 
     private Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

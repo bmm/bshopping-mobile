@@ -10,7 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class ProductActivity extends AppCompatActivity implements AsyncDatabase.OnDatabaseProduct {
-    Product mProduct;
+    private Product mProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,9 @@ public class ProductActivity extends AppCompatActivity implements AsyncDatabase.
                     p = new Product();
                 }
 
-                p.setName(txtName.getText().toString());
+                if (txtName != null) {
+                    p.setName(txtName.getText().toString());
+                }
                 AsyncDatabase db = new AsyncDatabase(this);
 
                 AsyncDatabase.OnDatabaseProduct handle = new AsyncDatabase.OnDatabaseProduct() {

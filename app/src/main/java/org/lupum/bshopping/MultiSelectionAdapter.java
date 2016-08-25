@@ -6,19 +6,17 @@ import java.util.List;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
-public class MultiSelectionAdapter extends BaseAdapter {
-    Context mContext;
-    LayoutInflater mInflater;
-    List<Product> mList;
+class MultiSelectionAdapter extends BaseAdapter {
+    private final Context mContext;
+    private final LayoutInflater mInflater;
+    private List<Product> mList;
 
     public MultiSelectionAdapter(Context context, List<Product> list) {
         mContext = context;
@@ -28,27 +26,15 @@ public class MultiSelectionAdapter extends BaseAdapter {
     }
 
     public ArrayList<Product> getCheckedItems() {
-        ArrayList<Product> mTempArry = new ArrayList<>();
+        ArrayList<Product> mTempAarry = new ArrayList<>();
 
         for (Product p : mList) {
             if (p.isSelected()) {
-                mTempArry.add(p);
+                mTempAarry.add(p);
             }
         }
 
-        return mTempArry;
-    }
-
-    public ArrayList<Product> getUnCheckedItems() {
-        ArrayList<Product> mTempArry = new ArrayList<>();
-
-        for (Product p : mList) {
-            if (!p.isSelected()) {
-                mTempArry.add(p);
-            }
-        }
-
-        return mTempArry;
+        return mTempAarry;
     }
 
     @Override

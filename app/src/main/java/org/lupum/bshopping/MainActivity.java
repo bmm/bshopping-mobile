@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
@@ -17,9 +16,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener, AsyncDatabase.OnDatabaseProducts, AsyncDatabase.OnDatabaseProduct, AsyncDatabase.OnDatabaseProductDelete {
     private static final int PRODUCT_REQUEST = 1;
 
-    ListView mListView;
-    List<Product> mProducts;
-    MultiSelectionAdapter mAdapter;
+    private ListView mListView;
+    private List<Product> mProducts;
+    private MultiSelectionAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +28,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ProductActivity.class);
-                startActivityForResult(intent, PRODUCT_REQUEST);
-            }
-        });
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this, ProductActivity.class);
+                    startActivityForResult(intent, PRODUCT_REQUEST);
+                }
+            });
+        }
 
         bindComponents();
         init();
@@ -71,15 +72,24 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if (id == R.id.action_start_shopping) {
             onDatabaseProducts(mAdapter.getCheckedItems());
             item.setVisible(false);
-            MenuItem mniStop = toolbar.getMenu().findItem(R.id.action_stop_shopping);
-            mniStop.setVisible(true);
+            if (toolbar != null) {
+                MenuItem mniStop = toolbar.getMenu().findItem(R.id.action_stop_shopping);
+                if (mniStop != null) {
+                    mniStop.setVisible(true);
+                }
+            }
+
             return true;
         }
 
         if (id == R.id.action_stop_shopping) {
             item.setVisible(false);
-            MenuItem mniStart = toolbar.getMenu().findItem(R.id.action_start_shopping);
-            mniStart.setVisible(true);
+            if (toolbar != null) {
+                MenuItem mniStart = toolbar.getMenu().findItem(R.id.action_start_shopping);
+                if (mniStart != null) {
+                    mniStart.setVisible(true);
+                }
+            }
             init();
             return true;
         }

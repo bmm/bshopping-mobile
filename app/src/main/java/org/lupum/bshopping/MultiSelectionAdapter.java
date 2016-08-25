@@ -1,35 +1,49 @@
 package org.lupum.bshopping;
 
-/**
- * Created by bmm on 24/08/16.
- */
 import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
-import android.util.SparseBooleanArray;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MultiSelectionAdapter extends BaseAdapter {
     Context mContext;
     LayoutInflater mInflater;
-    ArrayList<Product> mList;
+    List<Product> mList;
 
-    public MultiSelectionAdapter(Context context, ArrayList<Product> list) {
-        this.mContext = context;
+    public MultiSelectionAdapter(Context context, List<Product> list) {
+        mContext = context;
         mInflater = LayoutInflater.from(mContext);
         mList = new ArrayList<>();
-        this.mList = list;
+        mList = list;
     }
 
     public ArrayList<Product> getCheckedItems() {
-        ArrayList<Product> mTempArry = new ArrayList<Product>();
+        ArrayList<Product> mTempArry = new ArrayList<>();
 
         for (Product p : mList) {
             if (p.isSelected()) {
+                mTempArry.add(p);
+            }
+        }
+
+        return mTempArry;
+    }
+
+    public ArrayList<Product> getUnCheckedItems() {
+        ArrayList<Product> mTempArry = new ArrayList<>();
+
+        for (Product p : mList) {
+            if (!p.isSelected()) {
                 mTempArry.add(p);
             }
         }
@@ -60,7 +74,7 @@ public class MultiSelectionAdapter extends BaseAdapter {
 
         Product product = mList.get(position);
 
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
+        final TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
         tvTitle.setTag(position);
         tvTitle.setText(product.getName());
 
@@ -82,6 +96,29 @@ public class MultiSelectionAdapter extends BaseAdapter {
                 } else {
                     view.setBackgroundResource(R.color.unSelectedBg);
                 }
+
+                // Update selected value
+                AsyncDatabase db = new AsyncDatabase(mContext);
+                db.updateProduct(product, null);
+            }
+        });
+
+        tvTitle.setOnLongClickListener((MainActivity)mContext);
+        tvTitle.setOnTouchListener(new OnSwipeTouchListener(mContext) {
+            public void onSwipeRight() {
+                new AlertDialog.Builder(mContext)
+                        .setTitle(mContext.getString(R.string.confirmation))
+                        .setMessage(mContext.getString(R.string.confirm_delete) + " " + tvTitle.getText() + "?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                int position = (Integer)tvTitle.getTag();
+                                Product p = mList.get(position);
+                                AsyncDatabase db = new AsyncDatabase(mContext);
+                                db.deleteProduct(p, (MainActivity)mContext);
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
             }
         });
 

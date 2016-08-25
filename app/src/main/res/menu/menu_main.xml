@@ -3,8 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="org.lupum.bshopping.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_start_shopping"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:title="@string/start_shopping"
+        android:icon="@drawable/ic_shopping_cart_white_24dp"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_stop_shopping"
+        android:orderInCategory="200"
+        android:title="@string/stop_shopping"
+        android:icon="@drawable/ic_remove_shopping_cart_white_24dp"
+        app:showAsAction="ifRoom"
+        android:visible="false" />
 </menu>

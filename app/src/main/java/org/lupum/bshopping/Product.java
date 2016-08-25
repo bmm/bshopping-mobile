@@ -1,9 +1,8 @@
 package org.lupum.bshopping;
 
-/**
- * Created by bmm on 24/08/16.
- */
-public class Product {
+import java.text.Collator;
+
+public class Product implements Comparable {
     private Long id;
     private String name;
     private boolean selected;
@@ -47,5 +46,14 @@ public class Product {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o != null && o instanceof Product) {
+            return Collator.getInstance().compare(name, ((Product)o).getName());
+        }
+
+        return 0;
     }
 }

@@ -1,23 +1,24 @@
 package org.lupum.bshopping;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.Button;
-import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnLongClickListener, AsyncDatabase.OnDatabaseProducts, AsyncDatabase.OnDatabaseProduct, AsyncDatabase.OnDatabaseProductDelete {
+    private static final int PRODUCT_REQUEST = 1;
+
     ListView mListView;
-    ArrayList<Product> mProducts;
+    List<Product> mProducts;
     MultiSelectionAdapter mAdapter;
 
     @Override
@@ -31,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, ProductActivity.class);
+                startActivityForResult(intent, PRODUCT_REQUEST);
             }
         });
 
@@ -45,28 +46,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        mProducts = new ArrayList<Product>();
-        mProducts.add(new Product("Pendrive"));
-        mProducts.add(new Product("Laptop"));
-        mProducts.add(new Product("Mouse"));
-        mProducts.add(new Product("Keyboard"));
-        mProducts.add(new Product("HDD"));
-        mProducts.add(new Product("Ram"));
-        mProducts.add(new Product("Cable"));
-        mProducts.add(new Product("Monitor"));
-        mProducts.add(new Product("Cabinate"));
-        mProducts.add(new Product("CMOS"));
-        mProducts.add(new Product("Charger"));
-        mProducts.add(new Product("Processor"));
-        mProducts.add(new Product("Laptop Bag"));
-        mProducts.add(new Product("Laptop Stand"));
-        mProducts.add(new Product("Head Phone"));
-        mProducts.add(new Product("Mike"));
-        mProducts.add(new Product("Bluetooth"));
-        mProducts.add(new Product("Dongle"));
-
-        mAdapter = new MultiSelectionAdapter(this, mProducts);
-        mListView.setAdapter(mAdapter);
+        AsyncDatabase db = new AsyncDatabase(this);
+        db.getProducts(this);
     }
 
     @Override
@@ -83,11 +64,85 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_start_shopping) {
+            onDatabaseProducts(mAdapter.getCheckedItems());
+            item.setVisible(false);
+            MenuItem mniStop = toolbar.getMenu().findItem(R.id.action_stop_shopping);
+            mniStop.setVisible(true);
+            return true;
+        }
+
+        if (id == R.id.action_stop_shopping) {
+            item.setVisible(false);
+            MenuItem mniStart = toolbar.getMenu().findItem(R.id.action_start_shopping);
+            mniStart.setVisible(true);
+            init();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == PRODUCT_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                long id = data.getLongExtra("ID", 0);
+                if (id != 0) {
+                    AsyncDatabase db = new AsyncDatabase(this);
+                    db.getProduct(id, this);
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        Integer position = (Integer)view.getTag();
+        Product product = mProducts.get(position);
+
+        Intent intent = new Intent(MainActivity.this, ProductActivity.class);
+        intent.putExtra("ID", product.getId());
+        startActivityForResult(intent, PRODUCT_REQUEST);
+
+        return true;
+    }
+
+    @Override
+    public void onDatabaseProducts(List<Product> products) {
+        mProducts = products;
+        Collections.sort(mProducts);
+        mAdapter = new MultiSelectionAdapter(this, mProducts);
+        mListView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onDatabaseProduct(Product product) {
+        deleteProduct(product.getId());
+        mProducts.add(product);
+        Collections.sort(mProducts);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDatabaseProductDelete(Long productId) {
+        deleteProduct(productId);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void deleteProduct(Long productId) {
+        for (int i=0; i<mProducts.size(); i++) {
+            Product p = mProducts.get(i);
+            if (p.getId().equals(productId)) {
+                mProducts.remove(p);
+                break;
+            }
+        }
     }
 }

@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            keyAlias 'AndroidKey2'
-            storeFile file('/Users/bmm/Secure/Keystore/android2')
-            keyPassword 'xpto_xpto'
-            storePassword 'xpto_xpto'
+            keyAlias ANDROID_KEY_ALIAS
+            storeFile file(ANDROID_KEY_STORE)
+            keyPassword ANDROID_KEY_PASSWORD
+            storePassword ANDROID_STORE_PASSWORD
         }
     }
     compileSdkVersion 27

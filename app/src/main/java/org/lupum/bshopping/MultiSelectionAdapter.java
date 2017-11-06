@@ -55,7 +55,7 @@ class MultiSelectionAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.row, parent);
+            convertView = mInflater.inflate(R.layout.row, parent, false);
         }
 
         Product product = mList.get(position);

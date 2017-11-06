@@ -10,8 +10,7 @@ final class DatabaseSchema {
             "CREATE TABLE %s (" +
             "%s INTEGER PRIMARY KEY, " +
             "%s TEXT, " +
-            "%s INTEGER, " +
-            ")",
+            "%s INTEGER)",
             ProductEntry.TABLE_NAME,
             ProductEntry.COLUMN_NAME_PRODUCT_ID,
             ProductEntry.COLUMN_NAME_NAME,

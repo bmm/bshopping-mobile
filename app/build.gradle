@@ -1,16 +1,19 @@
 apply plugin: 'com.android.application'
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     signingConfigs {
         config {
-            keyAlias ANDROID_KEY_ALIAS
-            storeFile file(ANDROID_KEY_STORE)
-            keyPassword ANDROID_KEY_PASSWORD
-            storePassword ANDROID_STORE_PASSWORD
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
         }
     }
     compileSdkVersion 27
-    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "org.lupum.bshopping"
         minSdkVersion 16
@@ -25,7 +28,6 @@ android {
             signingConfig signingConfigs.config
         }
         debug {
-            signingConfig signingConfigs.config
         }
     }
     lintOptions {
@@ -38,8 +40,8 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation 'junit:junit:4.12'
     compileOnly 'com.android.support:appcompat-v7:27.0.0'
     implementation 'com.android.support:design:27.0.0'
     compileOnly 'com.android.support:support-compat:27.0.0'

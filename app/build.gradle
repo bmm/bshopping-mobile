@@ -1,16 +1,11 @@
 apply plugin: 'com.android.application'
 
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 
 android {
     signingConfigs {
         config {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
+
         }
     }
     compileSdkVersion 27
@@ -25,13 +20,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
         debug {
-        }
-        signedRelease {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
         }
     }
     lintOptions {
@@ -40,6 +31,25 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    def isRunningOnTravis = System.getenv("CI") == "true"
+
+    if (isRunningOnTravis) {
+        // configure keystore
+        signingConfigs.config.storeFile = file("../keystore/android.jks.enc")
+        signingConfigs.config.storePassword = System.getenv("KEYSTORE_PASSWORD")
+        signingConfigs.config.keyAlias = System.getenv("KEYSTORE_ALIAS")
+        signingConfigs.config.keyPassword = System.getenv("KEY_PASSWORD")
+    } else {
+        def keystorePropertiesFile = rootProject.file("keystore.properties")
+        def keystoreProperties = new Properties()
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+        signingConfigs.config.storeFile file(keystoreProperties['storeFile'])
+        signingConfigs.config.storePassword keystoreProperties['storePassword']
+        signingConfigs.config.keyAlias keystoreProperties['keyAlias']
+        signingConfigs.config.keyPassword keystoreProperties['keyPassword']
     }
 }
 

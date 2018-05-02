@@ -14,7 +14,17 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_b11a185a70f2_key -iv $encrypted_b11a185a70f2_iv
   -in keystore/android.jks.enc -out keystore/android.jks -d
 before_script:
-  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
-  - emulator -avd test -no-skin -no-audio -no-window &
-  - android-wait-for-emulator
-  - adb shell input keyevent 82 &
+- echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
+- emulator -avd test -no-skin -no-audio -no-window &
+- android-wait-for-emulator
+- adb shell input keyevent 82 &
+deploy:
+  provider: releases
+  api_key:
+    secure: fU5NWHUVnFKSSZtDW+/esOrNP3dw1dAwjnT2kvW+EkGtN+BPKP2e8eydjowW9mscR2KrSNkV5I+DN0Y5b7tXgVwlS/+L5mcyoYSAC+EReElJrnhm+PEy6oK7S6u7XIztlDmh+1YOjiTiYvZzToNJ/cDCP9ZzNtUNncB5xRjn3SdTEX5HXTHRFU1rXvqLe5nnzgPtzoQS8vAiHqmCY2zYMu5wbABM7X/E4Z4hJwmzR42+hJpqaHAoiVLBeoeJLhf9/Ls4xL5twhSooMnDSzc2DAaP32oHyNpWD9QAm/wXpU8ENB/LhvjkHQ0ohTGGMtm1MtUTx/mTwEuqLbAzfpymRyCFppvhw2HpOrHtxXf44nMvRLmvcpeycd/AuR9FkxnrBgAjkiP8ccJ8qb/lJL1oTvXEn2iaz16AZY8Yp0LjO/8CwpPz8U8xyIvOZjz0o8+RmQj3etaizXSrq99zkLH7fjWATPcj1ysR70RHE0mVSIJM5YyfKJXoa2JDF5OJ9WNK9/9Famiz7FGTT2MQeUWYfRuI+I+ivQbXXpx2lfIooeCsfT9AJFaT5IFU9WzCn5R8JMtCdfyxBbaPtHWwKxctHwfSL0kyErex+EbMdzzCKnMaWrzZOWvfr4UZtxE9YJDGdesp/jlMlT9aR5PbwSKOs2rNCfJf8M2rgxN7HD8iMfA=
+  file: app/build/outputs/apk/release/BShopping.apk
+  skip_cleanup: true
+  on:
+    repo: bmm/bshopping-mobile
+    tags: true
+

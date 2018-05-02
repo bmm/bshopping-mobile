@@ -13,7 +13,7 @@ import android.widget.ListView;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnLongClickListener, AsyncDatabase.OnDatabaseProducts, AsyncDatabase.OnDatabaseProduct, AsyncDatabase.OnDatabaseProductDelete {
+public class MainActivity extends AppCompatActivity implements AsyncDatabase.OnDatabaseProducts, AsyncDatabase.OnDatabaseProduct, AsyncDatabase.OnDatabaseProductDelete {
     private static final int PRODUCT_REQUEST = 1;
 
     private ListView mListView;
@@ -112,8 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
 
-    @Override
-    public boolean onLongClick(View view) {
+    public boolean edit(View view) {
         Integer position = (Integer)view.getTag();
         Product product = mProducts.get(position);
 

@@ -89,9 +89,8 @@ class MultiSelectionAdapter extends BaseAdapter {
             }
         });
 
-        tvTitle.setOnLongClickListener((MainActivity)mContext);
         tvTitle.setOnTouchListener(new OnSwipeTouchListener(mContext) {
-            public void onSwipeRight() {
+            public void onSwipeLeft() {
                 new AlertDialog.Builder(mContext)
                         .setTitle(mContext.getString(R.string.confirmation))
                         .setMessage(mContext.getString(R.string.confirm_delete) + " " + tvTitle.getText() + "?")
@@ -105,6 +104,9 @@ class MultiSelectionAdapter extends BaseAdapter {
                                 db.deleteProduct(p, (MainActivity)mContext);
                             }})
                         .setNegativeButton(android.R.string.no, null).show();
+            }
+            public void onSwipeRight() {
+                ((MainActivity)mContext).edit(tvTitle);
             }
         });
 
